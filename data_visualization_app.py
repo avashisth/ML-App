@@ -125,8 +125,8 @@ def anamolyHandle():
 
 
 
-def handleNull():
-    st.write(df.head())
+def handleNull(df):
+    
     col1, col2 = st.beta_columns(2)
     cat_data = df.select_dtypes(include=['object']).copy()
     col1.header("Categorical data: ")
@@ -148,13 +148,27 @@ def handleNull():
         st.write("Imputed values: ")
         st.dataframe(Xtrans)
     elif action == 'Handle outliers':
+        st.sidebar.write("Outlier plot settings: ")
+        x_val = st.sidebar.selectbox(label="Select x-axis value", options=non_numeric_columns)
+        y_val = st.sidebar.selectbox(label="Select y-axis value", options=numeric_columns)
+        colour = st.sidebar.selectbox(label="Select color value", options=non_numeric_columns)
+        plot=px.box(df, x = x_val, y = y_val, color=colour)
+        st.plotly_chart(plot)
+        if st.button('Remove Outliers'):
+            st.write(df.shape)
+            rowNums = []
+            for column in num_data:
+                med = num_data[column].median()
+                List=abs(num_data-med)
+                cond=List.median()*4.5
+                num_data[column] = List[~(List>cond)]
+
+            st.write("Modified dataset")
+            st.dataframe(num_data)
+            st.write(num_data.shape)
         
-        outliers = []
         
-        for (columnName, columnData) in num_data.iteritems(): 
-            z=np.abs(stats.zscore(columnData.values))   
-            outliers.append(np.where(z>3))
-        st.write(outliers)
+        
             
           
 
@@ -174,7 +188,7 @@ def handleNull():
 #main method front page:
 usr_model = st.selectbox ('Chose your process: ',('Select a process','Missing values and outlier handling','Identification of variables and data types', 'Correlation Analysis','Outlier and anamoly handling'))
 if usr_model == 'Missing values and outlier handling' :
-    handleNull()
+    handleNull(df)
 elif usr_model == 'Identification of variables and data types' :
     identifyData()
 elif usr_model == 'Correlation Analysis' :
