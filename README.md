@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 # ML-App
 =======
-# Streamlit_tutorials
-This repo is all about creating sample apps with Streamlit.
+# Exploratory data analysis tool
 >>>>>>> initial
+>>>>>>> In this project, we use python's Streamlit library to create a web-application that lets the user do basic EDA with visualization of graphs and charts.
+>>>>>>> 
